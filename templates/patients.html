@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Patients
+{% endblock %}
+
+{% block content %}
+  <h1>Patients</h1>
+  <table class="table">
+    <thead class="table">
+      <tr>
+        <th>S.N.</th>
+        <th>Name</th>
+        <th>Phonet</th>
+        <th>Appointment Date</th>
+        <th>Confirmed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for patient in patients %}
+        <tr>
+          <th>{{ loop.index }}</th>
+          <td>{{ patient.name }}</td>
+          <td>{{ patient.phone_number }}</td>
+          <td>{{ patient.appointment_date.strftime('%d %B %Y') }}</td>
+          <td>
+            {% if patient.confirmed %}
+              <span class="badge bg-success">Confirmed</span>
+            {% else %}
+              <span class="badge bg-danger">Not Confirmed</span>
+            {% endif %}
+
+            {% if not patient.confirmed %}
+              <a href="{{ url_for('confirm_patient', id=patient.id) }}" class="btn btn-sm btn-outline-success">Mark Confirmed</a>
+              
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
