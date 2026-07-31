@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{%block content%}
+<h1>Edit Patient</h1>
+
+<form method="POST">
+        <input type="text" name="name" value="{{ patient.name }}" placeholder="Enter patient name" class="form-control mb-2" required>
+        <input type="text" name="phone_number"  value="{{ patient.phone_number }}" placeholder="Please enter contact number" class="form-control mb-2" required>
+        <input type="date" name="appointment_date"  value="{{ patient.appointment_date }}" class="form-control mb-2" required>
+        <button class="btn btn-primary">Done</button>
+
+</form>
+
+{%endblock%}
+
+
