@@ -5,6 +5,7 @@ from datetime import datetime
 
 
 app = Flask(__name__)
+app.secret_key = "med"
 
 #Database
 
@@ -38,8 +39,8 @@ def show_patients( ):
     patients = patient.query.all( )
     return render_template('patients.html', patients=patients)
 
-#Add patient
-@app.route('/add' , methods=['GET', 'POST'])
+#Add 
+@app.route('/patients/add' , methods=['GET', 'POST'])
 def add_patient():
     if request.method == 'POST' :
          name = request.form.get('name')                              # there should be a variable that holds value and POST on db variable
@@ -53,33 +54,43 @@ def add_patient():
          )
          db.session.add(new_patient)
          db.session.commit()
+
+         flash("Patient added successfully !", "success")
          return redirect(url_for('show_patients'))
     return render_template('add_patient.html')
 
 #Mark as Confirmed
-@app.route('/confirm/<int:id>')
+@app.route('/patients/confirm/<int:id>')
 def confirm_patient(id):
      p= patient.query.get_or_404(id)
      p.confirmed =True
      db.session.commit( )
+     flash("Patient confirmed successfully !", "success")
      return redirect(url_for('show_patients'))
 
 #Edit
 @app.route('/edit/<int:id>', methods=['GET', 'POST' ])
 def edit_patient(id):
-     p = patient.query.get_or_404(id)
+
+     p=patient.query.get_or_404(id)
+
      if request.method == 'POST':
           p.name = request.form.get('name')
           p.phone_number = request.form.get('phone_number')
           p.appointment_date = datetime.strptime(request.form.get('appointment_date'), '%Y-%m-%d')
+
           db.session.commit( )
+          flash("Patient updated successfully !", "success")
           return redirect(url_for('show_patients'))
      return render_template('edit_patient.html', patient=p)
 
+
+
 #Delete
-@app.route('/delete/<int:id>', methods=['POST'])
+@app.route('/patients/delete/<int:id>', methods=['POST'])
 def delete_patient(id):
-     p = patient.query.get_or_404(id)
+
+     p=patient.query.get_or_404(id)
      db.session.delete(p)
      db.session.commit( )
      return redirect(url_for('show_patients'))
