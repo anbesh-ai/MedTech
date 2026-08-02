@@ -9,6 +9,8 @@
 
   <a href="{{ url_for('add_patient') }}"  class="btn btn-success" >+ New Patient</a>
 
+  <input type="text " id="searchInput" placeholder="Search by username...">
+  <button class="btn btn-outline-primary" onclick="filterPatients()">Search</button>
   <table class="table table-striped table-bordered">
     <thead class="table-dark">
       <tr>
@@ -22,7 +24,7 @@
 
       </tr>
     </thead>
-    <tbody>
+    <tbody id="patientTableBody">
       {% for patient in patients %}
         <tr>
           <th>{{ loop.index }}</th>      
@@ -58,4 +60,14 @@
       {% endfor %}
     </tbody>
   </table>
+  <script>
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.getElementById('patientTableBody').getElementsByTagName('tr');
+    for (let row of rows) {
+        let text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    }
+});
+</script>
 {% endblock %}

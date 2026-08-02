@@ -96,6 +96,26 @@ def delete_patient(id):
      return redirect(url_for('show_patients'))
 
 
+#ADMIN LOGIN
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+     ADMIN_USERNAME = 'pew'
+     ADMIN_PASSWORD = 'pew_'
+
+     if request.method == 'POST':
+          username = request.form.get('username')
+          password = request.form.get('password')
+
+          if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+               session['admin_logged_in'] = True
+               flash("Logged in successfully !", "success")
+               return redirect(url_for('show_patients'))
+          else:
+               flash("Invalid credentials. Please try again.", "danger")
+
+     return render_template('admin_login.html')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
