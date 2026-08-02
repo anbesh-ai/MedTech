@@ -2,6 +2,17 @@ from flask import Flask, flash, render_template, url_for , session , redirect
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import os
+from dotenv import load_dotenv
+from twilio.rest import Client
+
+load_dotenv()  
+
+account_sid = os.getenv('TWILIO_SID')
+auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+twilio_phone_number = os.getenv('TWILIO_PHONE')
+
+client = Client(account_sid, auth_token)
 
 
 app = Flask(__name__)
@@ -114,6 +125,19 @@ def admin_login():
                flash("Invalid credentials. Please try again.", "danger")
 
      return render_template('admin_login.html')
+
+
+@app.route('/patients/remind/<int:id>')
+def  send_reminder(id):
+     p=patient.query.get_or_404(id)
+     client.messages.create(
+          to = p.phone_number,
+          from_=os.getenv('TWILIO_PHONE'),
+          body=f"Reminder: Hi {p.name}, your appointment is on {p.appointment_date.strftime('%Y-%m-%d')}. Please confirm your attendance."
+
+     )
+     flash(f"Reminder sent to {p.name}!", "success")
+     return redirect(url_for('show_patients'))
 
 
 
