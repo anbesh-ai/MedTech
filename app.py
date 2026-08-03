@@ -2,9 +2,10 @@ from flask import Flask, flash, render_template, url_for , session , redirect
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import os
-from dotenv import load_dotenv
 from twilio.rest import Client
+from dotenv import load_dotenv
+import os
+
 
 load_dotenv()  
 
@@ -126,20 +127,16 @@ def admin_login():
 
      return render_template('admin_login.html')
 
-
 @app.route('/patients/remind/<int:id>')
-def  send_reminder(id):
-     p=patient.query.get_or_404(id)
+def send_reminder(id):
+     p = patient.query.get_or_404(id)
      client.messages.create(
-          to = p.phone_number,
-          from_=os.getenv('TWILIO_PHONE'),
-          body=f"Reminder: Hi {p.name}, your appointment is on {p.appointment_date.strftime('%Y-%m-%d')}. Please confirm your attendance."
-
+          body="sms_appointment_reminders",
+          to=p.phone_number,
+          from_=os.getenv('TWILIO_PHONE')
      )
      flash(f"Reminder sent to {p.name}!", "success")
      return redirect(url_for('show_patients'))
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
