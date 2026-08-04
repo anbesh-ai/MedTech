@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="mb-3">Smart Appointment Reminders</h1>
+    <p class="lead text-muted mx-auto" style="max-width: 600px;">
+        Helping clinics reduce missed appointments by reaching patients who don't own smartphones —
+        through simple SMS reminders and missed-call confirmations.
+    </p>
+</div>
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-4">
+        <div class="card text-center p-4 h-100">
+            <h5>📱 No Smartphone Needed</h5>
+            <p class="text-muted small">Works on any basic phone via SMS — no app or internet required.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-4 h-100">
+            <h5>✅ Easy Confirmation</h5>
+            <p class="text-muted small">Patients confirm attendance with a simple missed call.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-4 h-100">
+            <h5>🏥 Fewer No-Shows</h5>
+            <p class="text-muted small">Clinics save time and resources with timely reminders.</p>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-5">
+    <a href="{{ url_for('admin_login') }}" class="btn btn-primary btn-lg">Staff Login</a>
+</div>
+{% endblock %}

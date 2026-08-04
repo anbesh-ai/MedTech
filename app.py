@@ -38,7 +38,27 @@ with app.app_context( ):
 #Home
 @app.route('/')
 def home():
-    return "It works"
+     return render_template('home.html')
+#ADMIN LOGIN
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+     ADMIN_USERNAME = 'pew'
+     ADMIN_PASSWORD = 'pew_'
+
+     if request.method == 'POST':
+          username = request.form.get('username')
+          password = request.form.get('password')
+
+          if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+               session['is_admin'] = True
+               flash("Logged in successfully !", "success")
+               return redirect(url_for('show_patients'))
+          else:
+               flash("Invalid credentials. Please try again.", "danger")
+               return redirect(url_for('admin_login'))
+
+     return render_template('admin_login.html')
+
 
 #About
 @app.route('/about')
@@ -48,27 +68,36 @@ def about():
 #Patients  
 @app.route('/patients')
 def show_patients( ):
+    if not session.get('is_admin'):
+       return redirect(url_for('admin_login'))
+    
     patients = patient.query.all( )
     return render_template('patients.html', patients=patients)
 
 #Add 
-@app.route('/patients/add' , methods=['GET', 'POST'])
+@app.route('/patients/add', methods=['GET', 'POST'])
 def add_patient():
-    if request.method == 'POST' :
-         name = request.form.get('name')                              # there should be a variable that holds value and POST on db variable
-         phone = request.form.get('phone_number')
-         appt_date = request.form.get('appointment_date')   #new variable= line 18 db variable (for name, no.too)
+    if request.method == 'POST':
+        name = request.form.get('name')
+        phone = request.form.get('phone_number')
+        appt_date = request.form.get('appointment_date')
 
-         new_patient = patient(         #called a new_patient variable which stores the entred data and assign data in db variables
-              name=name,                  #db variable= current data holder variable
-              phone_number=phone,
-              appointment_date=datetime.strptime(appt_date, '%Y-%m-%d')   #vice versa line 46
-         )
-         db.session.add(new_patient)
-         db.session.commit()
+        if not phone.isdigit() or len(phone) != 10:
+            flash("Phone number must be exactly 10 digits.", "danger")
+            return redirect(url_for('add_patient'))
 
-         flash("Patient added successfully !", "success")
-         return redirect(url_for('show_patients'))
+        full_phone = '+977' + phone
+
+        new_patient = patient(
+            name=name,
+            phone_number=full_phone,
+            appointment_date=datetime.strptime(appt_date, '%Y-%m-%d')
+        )
+        db.session.add(new_patient)
+        db.session.commit()
+        flash("Patient added successfully!", "success")
+        return redirect(url_for('show_patients'))
+
     return render_template('add_patient.html')
 
 #Mark as Confirmed
@@ -108,24 +137,6 @@ def delete_patient(id):
      return redirect(url_for('show_patients'))
 
 
-#ADMIN LOGIN
-@app.route('/admin/login', methods=['GET', 'POST'])
-def admin_login():
-     ADMIN_USERNAME = 'pew'
-     ADMIN_PASSWORD = 'pew_'
-
-     if request.method == 'POST':
-          username = request.form.get('username')
-          password = request.form.get('password')
-
-          if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-               session['admin_logged_in'] = True
-               flash("Logged in successfully !", "success")
-               return redirect(url_for('show_patients'))
-          else:
-               flash("Invalid credentials. Please try again.", "danger")
-
-     return render_template('admin_login.html')
 
 @app.route('/patients/remind/<int:id>')
 def send_reminder(id):
