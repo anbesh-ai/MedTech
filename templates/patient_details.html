@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Patient Details
+{% endblock %}
+
+{% block content %}
+  <h1>Patient Details</h1>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ patient.name }}</h5>
+      <p class="card-text"><strong>Phone:</strong> {{ patient.phone_number }}</p>
+      <p class="card-text"><strong>Appointment Date:</strong> {{ patient.appointment_date.strftime('%d %B %Y') }}</p>
+      <p class="card-text"><strong>Confirmed:</strong> {{ 'Yes' if patient.confirmed else 'No' }}</p>
+      <a href="{{ url_for('show_patients') }}" class="btn btn-primary">Back to Patients</a>
+    </div>
+  </div>
+{% endblock %}

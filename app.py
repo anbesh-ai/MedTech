@@ -149,5 +149,11 @@ def send_reminder(id):
      flash(f"Reminder sent to {p.name}!", "success")
      return redirect(url_for('show_patients'))
 
+
+@app.route('/details/<int:id>')
+def view_patient(id):
+     p = patient.query.get_or_404(id)
+     return render_template('patient_details.html', patient=p)
+
 if __name__ == '__main__':
     app.run(debug=True)

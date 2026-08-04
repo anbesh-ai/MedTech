@@ -20,6 +20,7 @@
         <th>Appointment Date</th>
         <th>Confirmed</th>
         <th>Actions</th>
+        <th>View Details</th>
 
 
       </tr>
@@ -58,6 +59,10 @@
             </form>
 
 
+          </td>
+
+          <td>
+            <a href="{{ url_for('view_patient', id=patient.id) }}" class="btn btn-sm btn-outline-secondary">View Details</a>
           </td>
          
         </tr>
