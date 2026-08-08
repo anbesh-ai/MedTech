@@ -184,6 +184,23 @@ def view_patient(id):
     p = patient.query.get_or_404(id)
     return render_template('patient_details.html', patient=p)
 
+#Dashboard
+@app.route('/dashboard')
+def dashboard():
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+    
+    total = patient.query.count()
+    confirmed = patient.query.filter_by(confirmed=True).count()
+    pending = total - confirmed
+    confirmed_pct = round((confirmed/total * 100),1) if total > 0 else 0
+    
+    upcoming = patient.query.filter(patient.appointment_date>=datetime.now()).order_by(patient.appointment_date).limit(5).all()
+    
+    return render_template('dashboard.html', total=total, confirmed=confirmed, pending=pending, confirmed_pct=confirmed_pct, upcoming=upcoming)
+    
+
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

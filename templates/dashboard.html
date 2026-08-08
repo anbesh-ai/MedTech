@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content%}
+<h1 class="mb-4">Dashboard</h1>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <h6 class="text-muted">Total Patients</h6>
+            <h2>{{ total }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <h6 class="text-muted">Confirmed</h6>
+            <h2>{{ confirmed }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <h6 class="text-muted">Pending</h6>
+            <h2>{{ pending }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center p-3">
+            <h6 class="text-muted">Confirmation Rate</h6>
+            <h2>{{ confirmed_pct }}%</h2>
+        </div>
+    </div>
+  </div>
+
+  <h4>Upcoming Appointments</h4>
+    <table class ="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Appointment Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            
+            {% for p in upcoming %}
+            <tr>
+                <td>{{p.name}}</td>
+                <td>{{p.appointment_date.strftime('%d %B %Y')}}</td>
+                <td>
+                    {% if p.confirmed%}
+                        <span class="badge bg-success">Confirmed</span>
+                        {%else%}
+                           <span class="badge bg-danger">Pending</span>
+                        {%endif%}
+                </td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+{%endblock%}
+
+
+  
